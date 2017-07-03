@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div style="text-align:center">
-      <img src="./assets/cat.jpg">
+      <img src="./assets/cat.jpg" class='imglogo'>
     </div>    
     <router-view></router-view>
   </div>
@@ -22,7 +22,7 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
-img{
+.imglogo{
   width: 147px;
   border-radius: 25px;}
 </style>

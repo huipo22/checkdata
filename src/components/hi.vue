@@ -3,19 +3,14 @@
       <span id="spanid" style="display:none">{{$route.params.newsId}}</span>
       {{str}}
       <div class="left">
+          <h1 style="color:red">数据库data:</h1>
           <h2>{{arbody.title}}</h2>
-          <section>
-            <ul>
-              <li v-for="item in arbody.original_files">
-                <img :src="item" />
-              </li>
-            </ul>
-          </section>
           <article>
             <div v-html=arbody.body></div>
           </article>
       </div>
       <div class="right">
+          <h1 style="color:red">原网站:</h1>
           <iframe :src=arbody.page_url frameborder="0"></iframe>
       </div>
   </div>
@@ -38,6 +33,13 @@ export default {
         const ids = document.getElementById('spanid').innerHTML
         for (let [index, elem] of response.data.entries()) {
           if (index === Number(ids)) {
+            for (let [ind, item] of elem.original_files.entries()) {
+              elem.body = elem.body.replace('IMG_' + ind, `<img src = ${item} />`)
+            }
+            for (let [ind, item] of elem.video_data.entries()) {
+              console.log(ind, item.video_url)
+              elem.body = elem.body.replace('VIDEO_' + ind, `<iframe src = ${item.video_url} ></iframe>`)
+            }
             this.arbody = elem
           }
         }
@@ -72,24 +74,8 @@ iframe{
 article>p{
     text-align: left;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-    display: block;
-    margin: 10px 10px;
-    float: left;
-    width: 28%;
-    box-sizing: border-box;
-    height: 100px;
-    overflow: hidden;
-}
-
-li>img{
+article>p>img{
   width: 100%;
-  height: 100px
 }
 
 section{
