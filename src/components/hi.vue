@@ -34,11 +34,11 @@ export default {
         for (let [index, elem] of response.data.entries()) {
           if (index === Number(ids)) {
             for (let [ind, item] of elem.original_files.entries()) {
-              elem.body = elem.body.replace('IMG_' + ind, `<img src = ${item} />`)
+              elem.body = elem.body.replace('IMG_' + ind, `<img src = ${item} width='98%'/>`)
             }
             for (let [ind, item] of elem.video_data.entries()) {
               console.log(ind, item.video_url)
-              elem.body = elem.body.replace('VIDEO_' + ind, `<iframe src = ${item.video_url} ></iframe>`)
+              elem.body = elem.body.replace('VIDEO_' + ind, `<iframe src = ${item.video_url} width=400 height=275></iframe>`)
             }
             this.arbody = elem
           }
@@ -74,8 +74,8 @@ iframe{
 article>p{
     text-align: left;
 }
-article>p>img{
-  width: 100%;
+img{
+  width: 80%;
 }
 
 section{

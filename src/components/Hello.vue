@@ -6,9 +6,16 @@
         <router-link :to="{name:'hi',params:{newsId:index}}">{{index+1}}. {{el.title}}</router-link>
       </li>
     </ul>
-    <div class="pages" v-show="onn">                        
-     <button class="previem" @click="page('last')" v-show='curPage>0'>上一页</button>
-     <button class="next" @click="page('!last')" v-show="curPage<pageCount-1">下一页</button>
+    <div class="block">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="curPage"
+        :page-sizes=pageSizes
+        :page-size=pageSize
+        layout="total, sizes, prev, pager, next, jumper"
+        :total=Totals>
+      </el-pagination>
     </div>
   </div>
 </template>
@@ -21,21 +28,21 @@ export default {
     return {
       msg: '数据检查',
       datas: [],
+      Totals: 0,
       listt2: [],
-      pageSize: 80,
+      pageSize: 50,
+      pageSizes: [50, 80, 100],
       curPage: 0,
       pageCount: '',
-      onn: true,
       rongliang: []
     }
   },
   created () {
     axios.get('http://localhost:3000')
       .then(response => {
-        console.log(response.data)
         this.datas = response.data
         this.rongliang = response.data
-        this.fenye()
+        this.Totals = response.data.length
       })
       .catch(error => {
         console.log(error)
@@ -43,23 +50,18 @@ export default {
       })
   },
   methods: {
-    page: function (el) {
-      el === 'last' ? this.curPage -- : this.curPage++
-      let curtotal = this.curPage * this.pageSize
-      let tiaoshu = this.curPage * this.pageSize + this.pageSize
+    handleSizeChange (val) {
+      console.log(`每页 ${val} 条`)
+      let curtotal = this.curPage * val
+      let tiaoshu = this.curPage * val + val
       this.listt2 = this.rongliang.slice(curtotal, tiaoshu)
     },
-    fenye: function () {
-      var _this = this
-      _this.listt2 = []
-      if (_this.rongliang) {
-        _this.pageCount = Math.ceil(_this.rongliang.length / _this.pageSize)
-        for (var i = 0; i < _this.pageSize; i++) {
-          if (_this.rongliang[i]) {
-            _this.listt2.push(_this.rongliang[i])
-          }
-        }
-      }
+    handleCurrentChange (val) {
+      console.log(`当前页: ${val}`)
+      val = --val
+      let curtotal = val * this.pageSize
+      let tiaoshu = val * this.pageSize + this.pageSize
+      this.listt2 = this.rongliang.slice(curtotal, tiaoshu)
     }
   }
 }
@@ -70,7 +72,7 @@ export default {
 [v-cloak] {
   display: none;
 }
-.pages{
+.block{
     position: fixed;
     bottom: 5%;
     right: 5%;
